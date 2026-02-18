@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SW/AI 인재양성 사업 비교 분석</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1.05em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        /* ── 탭 네비게이션 ── */
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 50px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .tab-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* ── 탭 패널 ── */
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ── 개요 카드 ── */
+        .overview-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .overview-card h2 {
+            grid-column: 1/-1;
+            color: #667eea;
+            font-size: 1.6em;
+            margin-bottom: 4px;
+        }
+
+        .overview-card .subtitle {
+            grid-column: 1/-1;
+            color: #555;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .ov-item {
+            background: white;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+
+        .ov-item .label {
+            font-size: 0.78em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .ov-item .value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* ── 상세 섹션 ── */
+        .detail-section {
+            margin-bottom: 28px;
+        }
+
+        .detail-section h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e8ecff;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 14px 16px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box .key {
+            font-size: 0.82em;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .info-box .val {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tag {
+            background: #e8ecff;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .tag.warn {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .tag.danger {
+            background: #fde8e8;
+            color: #c0392b;
+        }
+
+        .tag.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* ── 비교 테이블 ── */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88em;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 11px 16px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafafa;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: #f0f2ff;
+        }
+
+        /* ── 의사결정 가이드 ── */
+        .guide-block {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            border-left: 5px solid #667eea;
+        }
+
+        .guide-block h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .guide-block ul {
+            margin-left: 18px;
+        }
+
+        .guide-block li {
+            margin-bottom: 7px;
+            font-size: 0.93em;
+        }
+
+        /* ── 시나리오 ── */
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+
+        .scenario-card {
+            background: #d1ecf1;
+            border-radius: 12px;
+            padding: 18px;
+            border-left: 4px solid #0c5460;
+        }
+
+        .scenario-card strong {
+            color: #0c5460;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .scenario-card p {
+            color: #0c5460;
+            font-size: 0.9em;
+        }
+
+        /* ── 체크리스트 ── */
+        .checklist {
+            background: #fff8e1;
+            border-radius: 12px;
+            padding: 24px;
+            border-left: 5px solid #f59e0b;
+        }
+
+        .checklist h3 {
+            color: #92400e;
+            margin-bottom: 14px;
+        }
+
+        .checklist ul {
+            margin-left: 18px;
+        }
+
+        .checklist li {
+            margin-bottom: 8px;
+            font-size: 0.93em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 SW/AI 인재양성 사업 비교 분석</h1>
+            <p>SW마에스트로 · SSAFY · 42 Seoul · SW중심대학 종합 비교</p>
+        </header>
+
+        <div class="content">
+
+            <!-- ════════════════════════════════
+             탭 1: 사업별 상세 정보
+        ════════════════════════════════ -->
+            <div class="section">
+                <h2>📌 사업별 상세 정보</h2>
+
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="showTab('maestro', this)">🏆 SW마에스트로</button>
+                    <button class="tab-btn" onclick="showTab('ssafy', this)">💼 SSAFY</button>
+                    <button class="tab-btn" onclick="showTab('42seoul', this)">🔬 42 Seoul</button>
+                    <button class="tab-btn" onclick="showTab('swuniv', this)">🏫 SW중심대학</button>
+                </div>
+
+                <!-- SW마에스트로 -->
+                <div id="tab-maestro" class="tab-panel active">
+                    <div class="overview-card">
+                        <h2>SW마에스트로 (AI·SW마에스트로)</h2>
+                        <p class="subtitle">선발 → 집중 연수(예비+본) → 팀 프로젝트/멘토링 → 결과물·취업·창업 연계 중심의 프로젝트 기반 고급 인재 양성 프로그램</p>
+                        <div class="ov-item">
+                            <div class="label">주관기관</div>
+                            <div class="value">과학기술정보통신부 / IITP 전담</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 기간</div>
+                            <div class="value">8개월 (예비 2개월 + 본 6개월)</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 장소</div>
+                            <div class="value">서울센터 / 부산센터</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">선발인원</div>
+                            <div class="value">서울 300명, 부산 150명 (17기 기준)</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>💰 지원 혜택</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">예비 연수 지원금</div>
+                                <div class="val">월 30만원 (세전) × 2개월</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">본 연수 장학금</div>
+                                <div class="val">월 100만원 × 6개월</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">장비 지원</div>
+                                <div class="val">노트북 등 구입비 300만원 (1회)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">총 지원 규모</div>
+                                <div class="val">약 930만원 (기본 기준)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">교육비</div>
+                                <div class="val">무료</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">기타</div>
+                                <div class="val">자기주도 학습비/팀 활동비 (공고 확인)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>📋 지원 자격 및 선발</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">핵심 조건</div>
+                                <div class="val">본 연수과정 기간 중 미취업자</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">세부 기준</div>
+                                <div class="val">공고문 기준으로 확인 필요</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">선발 절차</div>
+                                <div class="val">코딩테스트 → 면접 → 과제</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>🎯 교육 방식</h3>
+                        <div class="tag-list">
+                            <span class="tag">팀 프로젝트 중심</span>
+                            <span class="tag">전문가 멘토링</span>
+                            <span class="tag">문제해결형</span>
+                            <span class="tag">포트폴리오 산출물</span>
+                            <span class="tag">취업·창업 연계</span>
+                            <span class="tag">수료생 네트워크</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>⚠️ 의무사항 및 리스크</h3>
+                        <div class="tag-list">
+                            <span class="tag warn">본 연수 중 미취업 유지</span>
+                            <span class="tag warn">출석/프로젝트 수행</span>
+                            <span class="tag danger">중도탈락 시 환수 가능성</span>
+                            <span class="tag warn">팀 프로젝트 저작권 확인</span>
+                            <span class="tag warn">병행 가능 여부 확인</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSAFY -->
+                <div id="tab-ssafy" class="tab-panel">
+                    <div class="overview-card">
+                        <h2>삼성청년SW아카데미 (SSAFY)</h2>
+                        <p class="subtitle">삼성이 운영하는 1년 과정(기수형) 실전 SW/AI 교육 + 취업지원 패키지</p>
+                        <div class="ov-item">
+                            <div class="label">운영기관</div>
+                            <div class="value">삼성전자</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 기간</div>
+                            <div class="value">1년 (예: 2026년 1월~12월)</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 장소</div>
+                            <div class="value">서울·대전·광주·구미·부울경</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">지원 자격</div>
+                            <div class="value">29세 이하, 4년제 대학 졸업(예정), 전공무관</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>💰 지원 혜택</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">교육지원비</div>
+                                <div class="val">월 100만원 × 12개월</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">총 지원 규모</div>
+                                <div class="val">약 1,200만원</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">교육비</div>
+                                <div class="val">무료</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">인프라</div>
+                                <div class="val">서버/GPU 인프라 지원</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">장비</div>
+                                <div class="val">노트북 대여 (2학기)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">취업지원</div>
+                                <div class="val">컨설팅, 채용박람회, 현업 멘토링</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>📋 지원 자격 및 선발</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">연령</div>
+                                <div class="val">29세 이하</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">학력</div>
+                                <div class="val">4년제 대학 졸업(예정) / 마이스터고</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">전공</div>
+                                <div class="val">전공무관</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">선발 절차</div>
+                                <div class="val">지원서 → SW 적성진단 → 인터뷰</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>🎯 교육 방식</h3>
+                        <div class="tag-list">
+                            <span class="tag">기초→심화→프로젝트 구조</span>
+                            <span class="tag">강의 + 실습</span>
+                            <span class="tag">취업 컨설팅</span>
+                            <span class="tag">채용박람회</span>
+                            <span class="tag">기업 연계 프로젝트</span>
+                            <span class="tag">현업 멘토링</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>⚠️ 의무사항 및 리스크</h3>
+                        <div class="tag-list">
+                            <span class="tag warn">전일제 참여 필수</span>
+                            <span class="tag warn">1년 장기 과정 몰입</span>
+                            <span class="tag danger">캠퍼스 배치 지역 고정</span>
+                            <span class="tag warn">중도탈락 패널티 확인</span>
+                            <span class="tag warn">AI 트랙 최신 정보 확인</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 42 Seoul -->
+                <div id="tab-42seoul" class="tab-panel">
+                    <div class="overview-card">
+                        <h2>42 Seoul</h2>
+                        <p class="subtitle">교수·교재·학비 없는 3無 교육을 표방하는 자기주도·동료학습 기반 개발자 양성 프로그램</p>
+                        <div class="ov-item">
+                            <div class="label">운영기관</div>
+                            <div class="value">이노베이션 아카데미 (프랑스 42 모델)</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 기간</div>
+                            <div class="value">라피신 1개월 + 본과정 (전체 기간 정보 없음)</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 장소</div>
+                            <div class="value">42 Seoul 캠퍼스</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">선발인원</div>
+                            <div class="value">정보 없음</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>💰 지원 혜택</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">교육지원금</div>
+                                <div class="val">월 100만원 상당</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">지급 형태</div>
+                                <div class="val">확인 필요 (현금/상당액)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">교육비</div>
+                                <div class="val">무료 (학비 無)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">기타</div>
+                                <div class="val">공간 이용 조건 확인 필요</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>📋 지원 자격 및 선발</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">연령/학력</div>
+                                <div class="val">정보 없음 (제한 없는 것으로 알려짐)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">선발 절차</div>
+                                <div class="val">온라인 테스트 → 체크인 미팅 → 라피신(1개월) → 본과정</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>🎯 교육 방식</h3>
+                        <div class="tag-list">
+                            <span class="tag">완전 자기주도</span>
+                            <span class="tag">동료학습</span>
+                            <span class="tag">과제 해결 중심</span>
+                            <span class="tag">동료평가</span>
+                            <span class="tag">교수·교재 없음</span>
+                            <span class="tag">기업 연계 (세부 확인)</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>⚠️ 의무사항 및 리스크</h3>
+                        <div class="tag-list">
+                            <span class="tag warn">라피신 통과 필수</span>
+                            <span class="tag warn">과제 해결 및 동료평가</span>
+                            <span class="tag danger">완전 자기주도 적응 필요</span>
+                            <span class="tag danger">학습 몰입도가 성패 좌우</span>
+                            <span class="tag warn">지원금 지급 조건 확인 필수</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SW중심대학 -->
+                <div id="tab-swuniv" class="tab-panel">
+                    <div class="overview-card">
+                        <h2>SW중심대학 (소프트웨어 중심대학 사업)</h2>
+                        <p class="subtitle">대학을 선정해 SW/AI 교육 체계를 대학 단위로 개편·확대하도록 지원하는 정부 재정지원 사업 (개인 교육 프로그램 아님)</p>
+                        <div class="ov-item">
+                            <div class="label">주관기관</div>
+                            <div class="value">과학기술정보통신부 / 선정 대학 사업단</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">교육 기간</div>
+                            <div class="value">대학 재학 기간 (4년)</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">대학 지원 규모</div>
+                            <div class="value">매년 20억원 (1차년도 10억원)</div>
+                        </div>
+                        <div class="ov-item">
+                            <div class="label">지원 구조</div>
+                            <div class="value">대학 선정 사업 → 학생 간접 수혜</div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>💰 지원 혜택</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">대학 지원금</div>
+                                <div class="val">매년 20억원 (대학 단위)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">학생 직접 지원</div>
+                                <div class="val">없음 (간접 수혜 구조)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">학생 혜택</div>
+                                <div class="val">대학별 장학/마일리지 (편차 큼)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">자부담</div>
+                                <div class="val">대학 등록금 (일반 학비)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>📋 지원 대상</h3>
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="key">직접 대상</div>
+                                <div class="val">선정된 대학 (사업단)</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">간접 수혜</div>
+                                <div class="val">선정 대학 재학생</div>
+                            </div>
+                            <div class="info-box">
+                                <div class="key">선발 방식</div>
+                                <div class="val">대학별 자체 기준 (교과/비교과)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>🎯 사업 내용</h3>
+                        <div class="tag-list">
+                            <span class="tag">전공 교육 강화</span>
+                            <span class="tag">비전공자 SW/AI 융합 교육</span>
+                            <span class="tag">산학연 협력 과제</span>
+                            <span class="tag">지역 연계 프로그램</span>
+                            <span class="tag">경진대회/페스티벌</span>
+                            <span class="tag">대학 인프라 개편</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>⚠️ 의무사항 및 리스크</h3>
+                        <div class="tag-list">
+                            <span class="tag danger">선정 대학만 해당</span>
+                            <span class="tag danger">대학별 편차 매우 큼</span>
+                            <span class="tag warn">간접 수혜 → 체감 낮을 수 있음</span>
+                            <span class="tag warn">실제 제공 프로그램 확인 필수</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════
+             탭 2: 전체 비교 테이블
+        ════════════════════════════════ -->
+            <div class="section">
+                <h2>📋 전체 비교 테이블</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>비교 항목</th>
+                            <th>SW마에스트로</th>
+                            <th>SSAFY</th>
+                            <th>42 Seoul</th>
+                            <th>SW중심대학</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>주관/운영기관</strong></td>
+                            <td>과기정통부 / IITP 전담</td>
+                            <td>삼성전자</td>
+                            <td>이노베이션 아카데미<br>(프랑스 42 모델)</td>
+                            <td>과기정통부 / 선정 대학</td>
+                        </tr>
+                        <tr>
+                            <td><strong>지원 대상</strong></td>
+                            <td>미취업자<br>(세부 공고 확인)</td>
+                            <td>29세 이하<br>4년제 졸업(예정)<br>전공무관</td>
+                            <td>온라인 테스트 통과자<br>(학력/연령 정보 없음)</td>
+                            <td>선정 대학 재학생<br>(간접 수혜)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>선발 절차</strong></td>
+                            <td>코딩테스트 → 면접 → 과제</td>
+                            <td>지원서 → SW 적성진단 → 인터뷰</td>
+                            <td>온라인 테스트 → 라피신(1개월) → 본과정</td>
+                            <td>대학별 자체 선발</td>
+                        </tr>
+                        <tr>
+                            <td><strong>교육 기간</strong></td>
+                            <td>8개월<br>(예비 2 + 본 6)</td>
+                            <td>1년</td>
+                            <td>라피신 1개월 + 본과정<br>(전체 기간 정보 없음)</td>
+                            <td>4년 (재학 기간)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>교육 장소</strong></td>
+                            <td>서울 / 부산</td>
+                            <td>서울·대전·광주·구미·부울경</td>
+                            <td>42 Seoul 캠퍼스</td>
+                            <td>선정 대학 캠퍼스</td>
+                        </tr>
+                        <tr>
+                            <td><strong>금전 지원</strong></td>
+                            <td>예비 월 30만원<br>본 월 100만원<br>장비 300만원<br><strong>≈ 930만원</strong></td>
+                            <td>월 100만원 × 12개월<br><strong>= 1,200만원</strong></td>
+                            <td>월 100만원 상당<br>(지급 조건 확인 필요)</td>
+                            <td>학생 직접 지원 없음<br>(대학별 장학 상이)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>장비/인프라</strong></td>
+                            <td>노트북 등 300만원</td>
+                            <td>노트북 대여<br>서버/GPU 인프라</td>
+                            <td>정보 없음</td>
+                            <td>대학별 상이</td>
+                        </tr>
+                        <tr>
+                            <td><strong>교육 방식</strong></td>
+                            <td>팀 프로젝트<br>멘토링<br>문제해결형</td>
+                            <td>기초→심화→프로젝트<br>강의 + 실습</td>
+                            <td>완전 자기주도<br>동료학습<br>과제 해결</td>
+                            <td>교과/비교과<br>산학협력 프로젝트</td>
+                        </tr>
+                        <tr>
+                            <td><strong>성과/연계</strong></td>
+                            <td>취업·창업 연계<br>수료생 네트워크<br>프로젝트 포트폴리오</td>
+                            <td>취업 컨설팅<br>채용박람회<br>기업 프로젝트<br>현업 멘토링</td>
+                            <td>과제 해결 중심<br>동료평가<br>기업 연계(세부 미확인)</td>
+                            <td>산학연 협력<br>경진대회<br>대학별 취업 지원</td>
+                        </tr>
+                        <tr>
+                            <td><strong>자부담/비용</strong></td>
+                            <td>없음 (무료)</td>
+                            <td>없음 (무료)</td>
+                            <td>없음 (무료)</td>
+                            <td>대학 등록금</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ════════════════════════════════
+             의사결정 가이드
+        ════════════════════════════════ -->
+            <div class="section">
+                <h2>🎯 의사결정 가이드</h2>
+
+                <div class="guide-block">
+                    <h3>1. 대상 적합성 / 진입 조건</h3>
+                    <ul>
+                        <li><strong>29세 이하 + 대학 졸업(예정)자:</strong> SSAFY 최적 (연령·학력 명확)</li>
+                        <li><strong>연령·학력 무관 + 자기주도 학습 선호:</strong> 42 Seoul 검토</li>
+                        <li><strong>미취업 상태 + 프로젝트 집중:</strong> SW마에스트로 적합</li>
+                        <li><strong>대학 재학생:</strong> SW중심대학 선정 여부 확인 후 교내 프로그램 활용</li>
+                    </ul>
+                </div>
+
+                <div class="guide-block">
+                    <h3>2. 선발 방식의 공정성 / 예측 가능성</h3>
+                    <ul>
+                        <li><strong>SSAFY:</strong> SW 적성진단 → 인터뷰 (비교적 명확한 단계)</li>
+                        <li><strong>42 Seoul:</strong> 온라인 테스트 → 라피신 1개월 (실력 검증 기간 길음)</li>
+                        <li><strong>SW마에스트로:</strong> 코딩테스트·면접·과제 (세부 비중은 공고 확인)</li>
+                        <li><strong>SW중심대학:</strong> 대학별 자체 기준 (편차 큼)</li>
+                    </ul>
+                </div>
+
+                <div class="guide-block">
+                    <h3>3. 지원 수준 (금전·장비·인프라)</h3>
+                    <ul>
+                        <li><strong>1년 안정적 지원:</strong> SSAFY (월 100만원 × 12개월 = 1,200만원)</li>
+                        <li><strong>단기 집중 최대 지원:</strong> SW마에스트로 (총 930만원 / 8개월)</li>
+                        <li><strong>인프라 지원:</strong> SSAFY (GPU/서버 + 노트북 대여)</li>
+                        <li><strong>42 Seoul:</strong> 월 100만원 상당 (지급 조건·형태 확인 필요)</li>
+                        <li><strong>SW중심대학:</strong> 간접 수혜 (대학별 장학/마일리지 상이)</li>
+                    </ul>
+                </div>
+
+                <div class="guide-block">
+                    <h3>4. 교육 방식과 결과물 품질</h3>
+                    <ul>
+                        <li><strong>프로젝트 중심 포트폴리오:</strong> SW마에스트로 (멘토링 + 팀 프로젝트)</li>
+                        <li><strong>체계적 커리큘럼 (기초→심화):</strong> SSAFY (1년 장기 과정)</li>
+                        <li><strong>완전 자기주도 학습:</strong> 42 Seoul (교수·교재 없음)</li>
+                        <li><strong>대학 정규 교육:</strong> SW중심대학 (학위 + 비교과)</li>
+                    </ul>
+                </div>
+
+                <div class="guide-block">
+                    <h3>5. 성과 연계 (취업/창업/네트워크)</h3>
+                    <ul>
+                        <li><strong>취업 지원 최강:</strong> SSAFY (컨설팅 + 채용박람회 + 기업 프로젝트)</li>
+                        <li><strong>창업 연계:</strong> SW마에스트로 (수료생 네트워크 + 프로젝트 결과물)</li>
+                        <li><strong>실력 검증 중심:</strong> 42 Seoul (과제 해결 + 동료평가)</li>
+                        <li><strong>산학협력:</strong> SW중심대학 (대학별 기업 연계)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════
+             시나리오별 추천
+        ════════════════════════════════ -->
+            <div class="section">
+                <h2>💡 시나리오별 추천</h2>
+                <div class="scenario-grid">
+                    <div class="scenario-card">
+                        <strong>개발자 커리어 전환 (비전공자)</strong>
+                        <p>1순위: SSAFY (체계적 교육 + 취업 지원)<br>2순위: 42 Seoul (자기주도 학습 가능자)</p>
+                    </div>
+                    <div class="scenario-card">
+                        <strong>프로젝트 경험 + 창업 관심</strong>
+                        <p>1순위: SW마에스트로 (멘토링 + 프로젝트 + 네트워크)<br>2순위: SSAFY (기업 프로젝트 연계)</p>
+                    </div>
+                    <div class="scenario-card">
+                        <strong>자기주도 학습 선호 + 시간 유연성</strong>
+                        <p>1순위: 42 Seoul (완전 자율 + 동료학습)<br>2순위: SW중심대학 (대학 재학생인 경우)</p>
+                    </div>
+                    <div class="scenario-card">
+                        <strong>대학 재학생 (학위 + 실무 병행)</strong>
+                        <p>1순위: SW중심대학 (선정 대학 재학 시)<br>2순위: 방학 중 단기 프로그램 검토</p>
+                    </div>
+                    <div class="scenario-card">
+                        <strong>기업 채용 파이프라인 구축</strong>
+                        <p>1순위: SSAFY (채용박람회 + 수료생 풀)<br>2순위: SW마에스트로 (프로젝트 검증 인재)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════
+             필수 확인 체크리스트
+        ════════════════════════════════ -->
+            <div class="section">
+                <div class="checklist">
+                    <h3>⚠️ 지원 전 필수 확인 사항</h3>
+                    <ul>
+                        <li><strong>SW마에스트로:</strong> 최종 선발 절차, 센터 출석 의무, 팀 프로젝트 저작권, 중도탈락 시 환수 조건</li>
+                        <li><strong>SSAFY:</strong> 전일제 참여 가능 여부, 캠퍼스 배치 지역, 수료 기준, AI 트랙 커리큘럼 최신 정보</li>
+                        <li><strong>42 Seoul:</strong> 지원금 지급 조건(현금/상당액), 라피신 난이도, 공간 이용 조건, 생활 패턴 적응 가능성</li>
+                        <li><strong>SW중심대학:</strong> 본인 대학 선정 여부, 실제 제공 프로그램(교과/비교과), 장학금/마일리지 제도, 참여 기업 풀</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showTab(id, btn) {
+            // 모든 패널 숨기기
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            // 모든 버튼 비활성화
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            // 선택한 패널 표시
+            document.getElementById('tab-' + id).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
